@@ -1,0 +1,4 @@
+pytorch
+numpy
+matplotlib
+python=3.10
