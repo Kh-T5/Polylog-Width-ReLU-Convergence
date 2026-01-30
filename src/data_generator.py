@@ -1,19 +1,17 @@
 import torch
-from src.model_utils import Teacher
 
 
-def generate_teacher_student_data(n_samples, d, k, margin_filter=0.1):
+def generate_teacher_student_data(teacher, n_samples, d, margin_filter=0.1):
     """
     Generates synthetic data (X, y) labeled by a Teacher network.
 
     Inputs:
+        teacher: Teacher class used to generate data.
         n_samples: Number of points.
         d: Input dimension.
-        k: Teacher width.
         margin_filter: Minimum distance from the decision boundary to
                        ensure the Assumption 2.1 of the paper is well-posed.
     """
-    teacher = Teacher(d, k)
     X_list = []
     y_list = []
 
@@ -28,4 +26,4 @@ def generate_teacher_student_data(n_samples, d, k, margin_filter=0.1):
     X = torch.cat(X_list, dim=0)
     y = torch.cat(y_list, dim=0).reshape(-1, 1)
 
-    return X, y, teacher
+    return X, y
