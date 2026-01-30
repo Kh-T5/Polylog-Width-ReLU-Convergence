@@ -8,21 +8,24 @@ class ShallowNet(nn.Module):
     Class for a shallow neural network with scalar output, initialized and scaled as assumed in Ji & Telgarsky paper.
     """
 
-    def __init__(self, d, m, scale_output=True):
+    def __init__(self, d, m):
         """
         Inputs:
             m, int, represents hidden_size
             d, int, represents data feature size
-            scale_output, bool, scaling for model output corresponding to paper's scaling.
+
+        Register the second layer and the scaling factor as buffers, since the paper only trains the hidden weights.
         """
         super().__init__()
         self.m = m
         self.hidden = nn.Linear(d, m, bias=False)
-        self.a = nn.Parameter(torch.randn(m, 1), requires_grad=False)
+
+        a_init = torch.randn(m, 1).sign()
+        self.register_buffer("a", a_init)
+
+        self.register_buffer("sqrt_m", torch.sqrt(torch.tensor(m, dtype=torch.float32)))
 
         nn.init.normal_(self.hidden.weight, std=1.0)
-
-        self.scaling = 1.0 / torch.sqrt(torch.tensor(m)) if scale_output else 1.0
 
     def forward(self, X):
         """
@@ -31,7 +34,7 @@ class ShallowNet(nn.Module):
             - X, (batchsize, d)
         """
         h = F.relu(self.hidden(X))
-        return (h @ self.a) * self.scaling
+        return (h @ self.a) / self.sqrt_m
 
     def get_activations(self, X):
         """
@@ -58,7 +61,6 @@ class Teacher(nn.Module):
 
     @torch.no_grad()
     def forward(self, x):
-        # f*(x) = sum(a_i * relu(w_i * x))
         h = F.relu(self.hidden(x))
         return h @ self.a
 

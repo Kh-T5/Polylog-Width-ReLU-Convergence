@@ -1,4 +1,5 @@
 pytorch
 numpy
 matplotlib
+tqdm
 python=3.10
