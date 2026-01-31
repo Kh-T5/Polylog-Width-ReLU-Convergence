@@ -15,6 +15,7 @@ class ShallowNet(nn.Module):
             d, int, represents data feature size
 
         Register the second layer and the scaling factor as buffers, since the paper only trains the hidden weights.
+        Initialize the weights with Gaussian Distribution as done in the Paper.
         """
         super().__init__()
         self.m = m
