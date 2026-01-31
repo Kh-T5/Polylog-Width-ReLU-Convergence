@@ -17,7 +17,7 @@ We implement a **Teacher-Student** framework to provide a ground-truth labeling 
 * **Optimization**: Gradient Descent (GD) on the logistic loss.
 
 ### Final Configuration
-* **Environment**: Python 3.10, run `pip install --file requirements.txt`
+* **Environment**: Python 3.10, run `pip install -r requirements.txt`
 * **Parameters**: $D=50, K=2, N=2000, LR=0.1, \text{Margin Filter}=0.3$ -> Can be changed in script file.
 * **Experiment**: run `python -m scripts.teacher_student_experience`
 
